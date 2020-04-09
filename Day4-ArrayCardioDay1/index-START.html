@@ -31,29 +31,105 @@
 
     // Array.prototype.filter()
     // 1. Filter the list of inventors for those who were born in the 1500's
+    // JO going to use a es6 arrow function instead of the whole function wes used.
+    const fifteen = inventors.filter( inventor => (inventor.year >= 1500 && inventor.year <= 1600));
+    console.table(fifteen);
+
 
     // Array.prototype.map()
     // 2. Give us an array of the inventors first and last names
+    const fullNames = inventors.map(inventor => `${inventor.first} ${inventor.last}`);
+    console.table(fullNames);
 
     // Array.prototype.sort()
     // 3. Sort the inventors by birthdate, oldest to youngest
+    const ordered = inventors.sort( (a, b) => a.year > b.year ? 1 : -1);
+    console.table(ordered);
 
     // Array.prototype.reduce()
     // 4. How many years did all the inventors live all together?
+    const totalYears = inventors.reduce( (total, inventor) => {
+      return total + (inventor.passed - inventor.year);
+    }, 0);
+    console.log(totalYears);
 
     // 5. Sort the inventors by years lived
+    const oldest = inventors.sort( (a, b) => {
+        const lastInventor = a.passed - a.year;
+        const nextInventor = b. passed - b.year;
+        return lastInventor > nextInventor ? -1 : 1;
+    })
+    console.table(oldest);
 
     // 6. create a list of Boulevards in Paris that contain 'de' anywhere in the name
     // https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris
+    const url = 'https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris';
+    /*
+    For this exercise I thought it would be nice to use the fetch API and grab the page,
+    parse it and then do the map, filter, include. However, when I set the request method 
+    to 'no-cors', their server sent me an 'opaque' response.type. which means the body is 
+    empty. I decided to save it because even though I know about CORS, I hadn't run into 'opaque' before.
+    */
+    // In order to prevent being blocked by cors errors I need to set the Request.mode to 'no-cors'
+    // fetch(url, {})
+    //   .then(response => {
+    //     console.log(response);
+    //     return response.text();
+    //   })
+    //   .then(html => {
+    //     // Convert the HTML string to a document.object
+    //     const parser = new DOMParser();
+    //     const doc = parser.parseFromString(html, 'text/html');
+    //     console.log(doc.body);
+
+    //     // Now that I have a DOM I can query it as Wes wanted.
+    //     const category = doc.querySelector('.mw-category');
+    //     // Cast the Node list of category to an array of links
+    //     const links = Array.from(category.querySelector('a'));
+    //     const de = links
+    //                 .map(link => link.textContent)
+    //                 .filter(streetName => streetName.includes('de'));
+    //     console.table(de);
+    //   })
+    //   .catch(err => {
+    //     console.warn('Error:', err);
+    //   });
+
+    /**
+     The following block is what Wes, the instructor intends for us to enter in 
+    the browser dev tools while we are on the wiki page above.
+    I'm commenting it out because it causes errors.
+    **/
+    // const category = document.querySelectorAll('.mw-category');
+    // const links = Array.from(category.querySelectorAll('a'));
+    // const de = links
+    //      .map(link => link.textContent)
+    //      .filter(streetName => streetName.includes('de'));
 
 
     // 7. sort Exercise
     // Sort the people alphabetically by last name
+    const alpha = people.sort( (lastOne, nextOne) => {
+      // De-structure result of split
+      const [aLast, aFirst] = lastOne.split(','); 
+      const [bLast, bFirst] = nextOne.split(',');
+      return aLast > bLast ? 1 : -1;
+    } );
+    console.log(alpha);
 
     // 8. Reduce Exercise
     // Sum up the instances of each of these
     const data = ['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car', 'truck' ];
 
+    const transportation = data.reduce( (obj, item) => {
+      if (!obj[item]){
+        obj[item] = 0;
+      }
+      obj[item]++;
+      return obj;
+    }, {} );
+
+    console.table(transportation);
   </script>
 </body>
 </html>
